@@ -1,0 +1,576 @@
+html {
+    background-color: transparent;
+}
+
+.left-pane div.install-me {
+    padding: 12px 20px;
+}
+
+.left-pane .release-notice {
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid color(border);
+    border-radius: 9px;
+    background: color(gray-bg);
+    color: color(text);
+    font-size: 12px;
+    border-spacing: 7px;
+}
+.release-title { font-weight: bold; }
+.release-detail { color: color(light-text); font-size: 11px; word-wrap: break-word; }
+.release-notice button { margin-top: 6px; width: *; }
+
+body {
+    overflow: hidden;
+}
+
+.theme-switcher {
+    flow: horizontal;
+    padding: 3px;
+    border-radius: 9px;
+    background: color(gray-bg);
+    border: 1px solid color(border);
+    margin: 12px 0;
+}
+.theme-switcher button {
+    width: *;
+    padding: 5px 3px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: color(light-text);
+    cursor: pointer;
+}
+.theme-switcher button.selected {
+    background: color(bg);
+    color: color(text);
+}
+.theme-switcher button:hover { color: color(button); }
+
+@media platform != "OSX" {
+    body {
+        border-top: color(border) solid 1px;
+    }
+}
+
+.title {
+    font-size: 1.4em;
+}
+
+.app {
+    flow: horizontal;
+    size: *;
+}
+
+.lighter-text {
+    color: color(lighter-text);
+    font-size: 0.9em;
+}
+
+.left-pane {
+    flow: vertical;
+    width: 200px;
+    height: *;
+    background: color(bg);
+    border-right: color(border) 1px solid;
+    position: relative;
+}
+
+#ab .left-pane {
+    border-radius: 1em;
+    padding: 1em;
+}
+
+#ab .right-pane {
+    background: none;
+}
+
+#ab .right-content {
+    overflow: unset;
+}
+
+.left-pane > div:nth-child(1) {
+    height: *;
+    overflow-y: auto;
+    border-spacing: 1em;
+    padding: 20px;
+    padding-bottom: 60px; /* reserve space for bottom connect-status */
+}
+
+.left-pane > div.connect-status {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.left-pane div {
+  word-wrap: break-word;
+}
+
+div.sessions-bar {
+    color: color(light-text);
+    padding-top: 0.5em;
+    border-top: color(border) solid 1px;
+    margin-bottom: 1em;
+    position: relative;
+    flow: horizontal;
+}
+
+div.sessions-tab span {
+    display: inline-block;
+    padding: 6px 8px;
+    cursor: pointer;
+    @ELLIPSIS;
+}
+
+div.sessions-tab svg {
+    size: 14px;
+}
+
+div.sessions-tab span.active {
+    cursor: default;
+    border-radius: 3px;
+    background: color(bg);
+    color: color(text);
+}
+
+div.search-id {
+    width: 120px;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+}
+
+div.search-id input {
+    font-size: 1em;
+    height: 20px;
+    border: none;
+    padding-left: 26px;
+}
+
+div.search-id span {
+    position: absolute;
+    top: 0px;
+    padding: 6px;
+    color: color(border);
+}
+
+div.search-id svg {
+    size: 14px;
+}
+
+span.search-icon {
+    left: 0px;
+}
+
+span.clear-input {
+    display: none;
+    right: 0px;
+}
+
+div.search-id:hover span.clear-input {
+    display: inline-block;
+}
+
+span.clear-input:hover {
+    color: black;
+}
+
+.your-desktop {
+    border-spacing: 0.5em;
+    border-left: color(accent) solid 2px;
+    padding-left: 0.5em;
+}
+
+.your-desktop input[type=text] {
+    padding: 0;
+    border: none;
+    height: 1.5em;
+}
+
+.your-desktop input[readonly] {
+    color: color(text) !important;
+}
+
+.your-desktop > div {
+    color: color(light-text);
+}
+
+.right-pane {
+    size: *;
+    background: color(gray-bg);
+}
+
+.right-content {
+    overflow: scroll-indicator;
+    padding: 1.6em;
+    border-spacing: 1.6em;
+    size: *;
+    flow: vertical;
+}
+
+@media platform == "OSX" {
+    .right-pane {
+        background: color(gray-bg-osx);
+    }
+}
+
+@mixin CARD {
+    padding: 1.6em;
+    border-spacing: 1em;
+    background: color(bg);
+    border-radius: 1em;
+}
+
+.card-connect {
+    @CARD;
+    width: 320px;
+}
+
+.right-buttons {
+    text-align: right;
+}
+
+.right-buttons>button {
+    margin-left: 1.6em;
+}
+
+div.connect-status {
+    left: 240px;
+    border-top: color(border) solid 1px;
+    width: 100%;
+    padding: 1em;
+}
+
+div.connect-status > span.connect-status-icon {
+    border-radius: 4px;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    margin-right: 1em;
+}
+
+div.connect-status > span.link {
+  margin-left: 1em;
+  display: inline-block;
+}
+
+span.connect-status-1 {
+    background: #e04f5f;
+}
+
+span.connect-status1 {
+    background: #32bea6;
+}
+
+span.connect-status0 {
+    background: #F5853B;
+}
+
+div.recent-sessions-content {
+    border-spacing: 1em;
+    flow: horizontal-flow;
+}
+
+span.peer-status {
+    display: block;
+    position: absolute;
+    size: 9px;
+    top: 8px;
+    right: 8px;
+    border: 2px solid white;
+    border-radius: 50%;
+    background: #8b929a;
+}
+span.peer-status[data-status="online"] { background: #24b36b; }
+span.peer-status[data-status="offline"] { background: #df5353; }
+div.remote-session-list .platform { position: relative; }
+div.remote-session-list span.peer-status { top: auto; bottom: 2px; right: 2px; }
+
+div.remote-session {
+    border-radius: 1em;
+    height: 140px;
+    width: 220px;
+    padding: 0;
+    position: relative;
+    border: none;
+}
+
+div.remote-session:hover, div.remote-session-list:hover {
+    outline: color(button) solid 2px -2px;
+}
+
+div.remote-session .platform {
+    width: *;
+    height: 120px;
+    padding: *;
+    position: relative;
+}
+
+div.remote-session .platform .username{
+    left: 0;
+    color: #eee;
+    position: absolute;
+    bottom: 38px;
+    font-size: 0.8em;
+    width: 220px;
+    text-align: center;
+}
+
+div.remote-session .platform svg {
+    width: 60px;
+    height: 60px;
+    background: none;
+}
+
+div.remote-session-list {
+    background: color(bg);
+    width: 220px;
+    flow: horizontal;
+}
+
+div.remote-session-list .platform {
+    size: 42px;
+}
+
+div.remote-session-list .platform svg {
+    width: 30px;
+    height: 30px;
+    background: none;
+    padding: 6px;
+}
+
+div.remote-session-list .name {
+    size: *;
+    padding-left: 1em;
+}
+
+div.remote-session-list .name >div {
+    margin-top: *;
+    margin-bottom: *;
+    width: *;
+}
+
+div.remote-session-list .name .username {
+    margin-top: 3px;
+    font-size: 0.8em;
+    color: color(lighter-text);
+}
+
+div.remote-session .text {
+    background: color(bg);
+    position: absolute;
+    height: 3em;
+    width: 100%;
+    border-radius: 0 0 1em 1em;
+    bottom: 0;
+    flow: horizontal;
+}
+
+div.remote-session .text > div {
+    padding-top: 1em;
+    padding-left: 1em;
+    width: *;
+}
+
+svg#menu {
+    size: 1em;
+    background: none;
+    padding: 0.5em;
+    margin: 0.5em;
+    color: color(light-text);
+}
+
+svg#settings-icon {
+    size: 1.1em;
+    padding: 0.5em;
+    margin: 0.5em;
+    color: color(light-text);
+    cursor: pointer;
+}
+svg#settings-icon:hover {
+    color: color(text);
+    border-radius: 1em;
+    background: color(gray-bg);
+}
+div#myid svg#settings-icon { position: absolute; right: -1em; }
+menu#config-options, menu#config-options menu { overflow-y: auto; }
+
+.remote-session-list svg#menu {
+    margin-right: 0;
+}
+
+svg#menu:hover {
+    color: color(text);
+    border-radius: 1em;
+    background: color(gray-bg);
+}
+
+svg#edit:hover {
+    color: color(text);
+}
+
+svg#edit {
+    display: inline-block;
+}
+
+div.install-me, div.trust-me {
+    margin-top: 0.5em;
+    padding: 20px;
+    color: white;
+    background: linear-gradient(left,#e242bc,#f4727c);
+}
+
+div.trust-me > div:nth-child(1),
+div.install-me > div:nth-child(1) {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.5em;
+}
+
+div.install-me > div:nth-child(2) {
+    line-height: 1.4em;
+}
+
+#install-me.link {
+    margin-top: 0.5em;
+}
+
+div.trust-me > div:nth-child(2) {
+    font-size: 0.9em;
+    margin-bottom: 1em;
+}
+
+div.install-me > div:nth-child(3),
+div.trust-me > div:nth-child(3) {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+div.trust-me > div:nth-child(4),
+div.trust-me > div:nth-child(5) {
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+div#myid, div#tags-label {
+    position: relative;
+}
+
+div#myid svg#menu, div#tags-label svg#menu {
+    position: absolute;
+    right: -1em;
+}
+
+div#tags-label svg#menu:hover {
+    background-color: #ddd;
+}
+
+div.remote-session svg#menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.install-me .button {
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1em;
+    margin-top: 1em;
+    border-color: white;
+    border: 1px;
+    background: none;
+    color: white;
+}
+
+svg#refresh-password {
+    display: inline-block;
+    stroke:#ddd;
+}
+
+svg#refresh-password:hover {
+    stroke:color(text);
+}
+
+li:disabled, li:disabled:hover {
+    color: color(lighter-text);
+    background: color(menu);
+    opacity: 0.8;
+}
+
+.grey-text {
+    color: #888 !important;
+}
+
+input.grey-text,
+textarea.grey-text {
+    color: #888 !important;
+}
+
+@media platform == "OSX" {
+    div.eye-area > input {
+        font-size: 1em;
+    }
+}
+
+/* Compact product identity; restrained hierarchy, matching both app themes. */
+.ruekran-brand { flow: horizontal; border-spacing: 11px; margin: 0 0 18px; padding-bottom: 17px; border-bottom: 1px solid color(border); }
+.ruekran-brand .brand-mark { width: 42px; height: 42px; margin-top: 3px; border-radius: 11px; background: color(gray-bg); }
+.ruekran-brand .brand-mark img { width: 30px; height: 30px; margin: 6px; }
+.ruekran-brand .brand-copy { width: *; }
+.ruekran-brand .brand-name { color: color(text); font-size: 21px; font-weight: bold; line-height: 1.25em; }
+.ruekran-brand .brand-caption { color: color(light-text); font-size: 11px; margin-top: 3px; }
+.ruekran-brand .brand-version { color: color(light-text); font-size: 9px; margin-top: 5px; }
+
+/* RuЭкран desktop visual language: quiet surfaces and a restrained brand accent. */
+html { var(accent): #a92f3a; var(button): #b83b44; var(gray-bg): #f3f4f6; var(border): #dfe2e7; var(text): #242830; var(light-text): #66707d; var(lighter-text): #7c8591; }
+html.darktheme { var(bg): #22262e; var(gray-bg): #191c22; var(border): #383e49; var(text): #f1f3f7; var(light-text): #b5bdc9; var(lighter-text): #9ba5b3; var(accent): #bd4e59; var(button): #c25762; }
+.left-pane { width: 228px; }
+.left-pane > div:nth-child(1) { padding: 22px; padding-bottom: 64px; }
+.ruekran-brand { border-spacing: 12px; margin-bottom: 18px; padding-bottom: 18px; }
+.ruekran-brand .brand-mark { width: 44px; height: 44px; border-radius: 12px; }
+.ruekran-brand .brand-mark img { width: 32px; height: 32px; }
+.ruekran-brand .brand-name { font-size: 22px; letter-spacing: -0.3px; }
+.ruekran-brand .brand-caption { font-size: 11px; line-height: 1.5em; margin-top: 5px; }
+.ruekran-brand .brand-version { font-size: 9px; margin-top: 7px; color: color(lighter-text); }
+.theme-switcher { margin: 0 0 20px; border-radius: 9px; padding: 3px; }
+.theme-switcher button { padding: 6px 3px; }
+.title { font-size: 1.25em; font-weight: bold; }
+.your-desktop { border-left: none; background: color(gray-bg); border: 1px solid color(border); border-radius: 9px; padding: 10px 12px; }
+.your-desktop input[type=text] { background: color(gray-bg); font-size: 1.3em; }
+.right-content { padding: 24px; border-spacing: 24px; }
+.card-connect { width: *; max-width: 460px; padding: 22px; border-radius: 12px; border: 1px solid color(border); border-spacing: 14px; }
+.card-connect input[type=text] { height: 44px; padding-left: 12px; border: 1px solid color(border); border-radius: 8px; font-size: 1.45em; }
+.card-connect input[type=text]:focus { border-color: color(button); }
+.right-buttons > button { height: 34px; padding: 0 15px; margin-left: 10px; border-radius: 7px; }
+.right-buttons > button#connect { color: white; font-weight: bold; }
+div.sessions-bar { border-top: none; margin-bottom: 14px; padding-top: 0; }
+div.sessions-tab span { padding: 8px 11px; border-radius: 7px; }
+div.sessions-tab span.active { border-radius: 7px; color: color(button); }
+div.search-id { width: 145px; }
+div.search-id input { border-radius: 7px; height: 26px; }
+div.recent-sessions-content { border-spacing: 12px; }
+div.remote-session-list { width: 230px; border: 1px solid color(border); border-radius: 9px; padding: 5px; }
+div.remote-session-list .platform { size: 38px; border-radius: 7px; margin: 2px 7px 2px 2px; }
+div.remote-session-list .platform svg { width: 26px; height: 26px; padding: 6px; }
+div.remote-session-list .name { padding-left: 3px; }
+div.remote-session-list:hover, div.remote-session:hover { outline: color(button) solid 1px -1px; }
+div.install-me, div.trust-me { background: color(gray-bg); color: color(text); border-top: 1px solid color(border); padding: 16px 20px; }
+div.install-me > div:nth-child(1), div.trust-me > div:nth-child(1) { text-align: left; font-size: 12px; margin-bottom: 7px; }
+div.install-me > div:nth-child(2) { font-size: 11px; color: color(light-text); }
+div.install-me > div:nth-child(3), div.trust-me > div:nth-child(3) { text-align: left; font-size: 12px; font-weight: normal; color: color(button); }
+.install-me .button { border: 1px solid color(border); color: color(text); border-radius: 7px; }
+div.connect-status { padding: 12px 20px; font-size: 11px; color: color(light-text); background: color(bg); }
+
+/* Align the wordmark to the icon center; the slogan has its own full-width row. */
+.ruekran-brand { flow: vertical; border-spacing: 0; }
+.ruekran-brand .brand-top { flow: horizontal; height: 44px; border-spacing: 12px; }
+.ruekran-brand .brand-mark { margin-top: 0; }
+.ruekran-brand .brand-copy { height: 44px; width: *; flow: vertical; }
+.ruekran-brand .brand-name { margin-top: *; margin-bottom: *; line-height: 1.2em; }
+.ruekran-brand .brand-caption { margin-top: 12px; font-size: 12px; line-height: 1.55em; }

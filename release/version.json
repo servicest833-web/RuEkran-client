@@ -1,0 +1,9 @@
+{
+  "base": "0.1.0",
+  "channel": "alpha",
+  "sequence": 19,
+  "build": 21,
+  "display": "0.1.0-alpha.19",
+  "numeric": "0.1.0.21",
+  "upstream": "1.5.0"
+}

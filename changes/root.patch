@@ -1,0 +1,23 @@
+diff --git a/res/ruekran-version-numeric.txt b/res/ruekran-version-numeric.txt
+index 864ec20b9..1a0cc16e3 100644
+--- a/res/ruekran-version-numeric.txt
++++ b/res/ruekran-version-numeric.txt
+@@ -1 +1 @@
+-0.1.0.20
++0.1.0.21
+diff --git a/res/ruekran-version.h b/res/ruekran-version.h
+index e41864c70..d80e6c054 100644
+--- a/res/ruekran-version.h
++++ b/res/ruekran-version.h
+@@ -1,2 +1,2 @@
+-#define RUEKRAN_VERSION_NUMBER 0,1,0,20
+-#define RUEKRAN_VERSION_TEXT "0.1.0-alpha.18"
++#define RUEKRAN_VERSION_NUMBER 0,1,0,21
++#define RUEKRAN_VERSION_TEXT "0.1.0-alpha.19"
+diff --git a/res/ruekran-version.txt b/res/ruekran-version.txt
+index bc80cca70..64e5bed2d 100644
+--- a/res/ruekran-version.txt
++++ b/res/ruekran-version.txt
+@@ -1 +1 @@
+-0.1.0-alpha.18
++0.1.0-alpha.19

@@ -1,0 +1,2 @@
+#define RUEKRAN_VERSION_NUMBER 0,1,0,21
+#define RUEKRAN_VERSION_TEXT "0.1.0-alpha.19"

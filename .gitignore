@@ -1,0 +1,15 @@
+/tools/
+/downloads/
+/package/
+/dist/
+/logs/
+**/target/
+**/build/
+**/node_modules/
+**/.dart_tool/
+**/__pycache__/
+*.dpapi
+*.pfx
+*.p12
+*.jks
+*.keystore
