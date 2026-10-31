@@ -640,22 +640,20 @@ class MyIdMenu: Reactor.Component {
     function showAbout() {
         var name = handler.get_app_name();
         msgbox("custom-nocancel-nook-hasclose", translate("About") + " " + name, "<div style='line-height: 2em'> \
-            <div><b>RuЭкран — на основе RustDesk</b></div> \
-            <div>Version: " + handler.get_version() + " \
-            <div>Fingerprint: " + handler.get_fingerprint() + " \
-            <div .link .custom-event url='https://rustdesk.com/privacy.html'>" + translate("Privacy Statement") + " RustDesk</div> \
-            <div .link .custom-event url='https://rustdesk.com'>" + translate("Website") + "</div> \
-            <div .link .custom-event url='notice'>Условия использования и сведения о сборке</div> \
+            <div><b>РуЭкран</b></div> \
+            <div>Версия: " + handler.get_version() + " \
+            <div .link .custom-event url='https://ruekran.ru/privacy/'>Политика конфиденциальности</div> \
+            <div .link .custom-event url='https://ruekran.ru/'>Сайт РуЭкран</div> \
+            <div .link .custom-event url='notice'>Лицензии и сведения о программе</div> \
             <div .link .custom-event url='license'>GNU AGPL v3</div> \
-            <div .link .custom-event url='source'>Исходный код этой сборки</div> \
-	    <div style='background: #2c8cff; color: white; padding: 1em; margin-top: 1em;'>Copyright &copy; 2026 Purslane Tech Pte. Ltd.\
+	    <div style='background: #2c8cff; color: white; padding: 1em; margin-top: 1em;'>Изменённый Windows-клиент на основе Rust&#68;esk.<br />Авторы исходного кода: Purslane Tech Pte. Ltd. и участники проекта.<br />Оператор РуЭкран: ООО «Стил Сервис».\
             <br />" + handler.get_license() + " \
             <p style='font-weight: bold'>Ваш компьютер рядом, где бы вы ни были</p>\
             </div>\
         </div>", "", function(el) {
             if (el && el.attributes) {
                 var url = el.attributes['url'];
-                if (url == 'license' || url == 'notice' || url == 'source') handler.open_legal_file(url);
+                if (url == 'license' || url == 'notice') handler.open_legal_file(url);
                 else handler.open_url(url);
             };
         }, 400, get_msgbox_width());

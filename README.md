@@ -1,6 +1,6 @@
 # РуЭкран — Windows client
 
-Corresponding source for the published **0.1.0-alpha.19** Windows client (update build **21**).
+Development branch **next**: contains the About/legal-text correction, compiled locally but not published as a new executable. For the exact published **0.1.0-alpha.19** Windows source (build **21**), use tag [`v0.1.0-alpha.19`](https://github.com/servicest833-web/RuEkran-client/tree/v0.1.0-alpha.19).
 
 РуЭкран — Windows-клиент удалённого доступа на основе RustDesk. Этот репозиторий содержит фактические исходники выпущенной Windows-версии: изменения РуЭкран, ресурсы, общий модуль `hbb_common` и скрипты сборки. Это изменённая сборка, а не официальный выпуск RustDesk.
 
@@ -12,7 +12,7 @@ Corresponding source for the published **0.1.0-alpha.19** Windows client (update
 - Privacy: https://ruekran.ru/privacy/
 - Terms of use: https://ruekran.ru/terms/
 
-`SOURCE-MANIFEST.json` records the SHA-256 of the published source archive and every Windows source file imported from it. The `source-x86/` files match that archive byte for byte. `SOURCE-REVISIONS.json` and `changes/` preserve the recorded source revisions and the release-time changes.
+`SOURCE-MANIFEST.json` records the SHA-256 of the published source archive and every Windows source file imported from it. On tag `v0.1.0-alpha.19`, the `source-x86/` files match that archive byte for byte. The manifest describes that release tag, not subsequent development changes. `SOURCE-REVISIONS.json` and `changes/` preserve the recorded source revisions and the release-time changes.
 
 ## Contents
 
