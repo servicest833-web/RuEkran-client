@@ -27,7 +27,7 @@ The separate Java Android application, server administration code, production de
 
 The published executable uses the Sciter x86 interface. The x86 binary also runs on supported x64 Windows through WOW64. This repository does not assert a fresh clean-machine build has been independently reproduced.
 
-Use Visual Studio 2022 C++ x86 tools, `nightly-2023-10-13-i686-pc-windows-msvc`, LLVM 15.0.6 x86, Python, and the pinned native dependencies in `source-x86/vcpkg.json` and `source-x86/vcpkg-configuration.json`. The original Windows build workflow is retained under `source-x86/.github/workflows/` as reference, not as an enabled root-level GitHub workflow.
+Use Visual Studio 2022 C++ x86 tools, `nightly-2023-10-13-i686-pc-windows-msvc`, LLVM 15.0.6 x86, Python, and the pinned native dependencies in `source-x86/vcpkg.json` and the retained upstream build workflow. The original Windows build workflow is retained under `source-x86/.github/workflows/` as reference, not as an enabled root-level GitHub workflow.
 
 1. Install the tools and dependencies. Adjust the machine-specific Visual Studio paths in `scripts/environment*.ps1`. The scripts expect local tools under `tools/` and native libraries under `tools/vcpkg-x86-installed/`.
 2. From the repository root, run `scripts/build-universal.ps1 -Rebuild` to retain the included release number.
