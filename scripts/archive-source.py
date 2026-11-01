@@ -55,9 +55,13 @@ with zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED, compresslevel=6) as
                      'res/ruekran-version-numeric.txt', 'res/ruekran-version.h']:
         if (root / relative).is_file() and 'source/' + relative not in archive.namelist():
             archive.write(root / relative, 'source/' + relative)
-    for path in (workspace / 'scripts').iterdir():
+    for name in ['archive-source.py', 'build-universal.ps1', 'package-universal.ps1',
+                 'environment.ps1', 'environment-x86.ps1', 'prepare-release.py',
+                 'verify-universal.py', 'test-release-version.py',
+                 'test-update-version.py', 'fetch-locked-crates.py']:
+        path = workspace / 'scripts' / name
         if path.is_file():
-            archive.write(path, 'build-scripts/' + path.name)
+            archive.write(path, 'build-scripts/' + name)
     report = workspace / 'dist/BUILD-REPORT.md'
     if report.exists():
         archive.write(report, 'ORIGINAL-BUILD-REPORT.md')

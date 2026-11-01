@@ -1,7 +1,7 @@
 {
-  "release": "0.1.0-alpha.19",
-  "windows_build": 21,
-  "published_source_archive_sha256": "68adf31cfb75aae3c6e37ae7cd5add55cf02cfafa6a6b78f10a2783a53067e2b",
+  "release": "0.1.0-alpha.20",
+  "windows_build": 22,
+  "published_source_archive_sha256": "ebb901dcf48465189a2b6ef2b60f403d0f78176df52bf64b7f31f3ad01044e45",
   "files": {
     "source-x86/.cargo/config.toml": "814adeece78c681223461ca54659539759b5e46b4694af8e96fbaa43bb0fa2e8",
     "source-x86/.gitattributes": "f80dcc94402f38c7b9be9d27d83a5f3010189ba041cdc5f27094480b4f909d0d",
@@ -194,7 +194,7 @@
     "source-x86/flutter/android/gradle/wrapper/gradle-wrapper.properties": "f599dc0a5c204463e3bae546eb4e7faa7a728869924c126fdd8b2053b5645132",
     "source-x86/flutter/android/settings.gradle": "a470a8ab85c7ccf793d80101ce4fc9013c5ff3d9391c960d5525e01c255aa81a",
     "source-x86/flutter/assets/AGPL-3.0.txt": "6f1e622c82a380075843bb084a7ec3b1f1d12a4a02526d75e78b0924a860aa75",
-    "source-x86/flutter/assets/RuEkran-NOTICE.txt": "0345fcb6a469698bce1babcf438aaac39fd2d8a9ffa0cc57ba17e2410ab582a8",
+    "source-x86/flutter/assets/RuEkran-NOTICE.txt": "d20b5e5d610e29ad608c340e53eb34deefa936c13d96870c0ea9d14aa6e54db2",
     "source-x86/flutter/assets/actions.svg": "ef6597b20e4578e8a6ddfe62f46a9681a8e4649b132f1f10f9fc5da15018a7c9",
     "source-x86/flutter/assets/actions_mobile.svg": "527c6a251e5053ace7e469d2b1080108448ade654a5641a3b8d4052df94a13cf",
     "source-x86/flutter/assets/address_book.ttf": "c725b18176aa78151e013222a9fc9c439a9a9106d6c061e8f617162a80a8b4f7",
@@ -768,9 +768,9 @@
     "source-x86/res/rpm-suse.spec": "2527fc345eab7121b158dcf24ed2a05db2bff399856e1e59a18814578190fc1d",
     "source-x86/res/rpm.spec": "7ec9d3ac87e8dfceaeb7396c43136e60368a41e37cc8f84af09f6b81bdf6862b",
     "source-x86/res/ruekran-build-version.rs": "a32ebdb016513319d09363e8c66b2bae84f9a3481592c088edbca446baf41c9b",
-    "source-x86/res/ruekran-version-numeric.txt": "d08674edc8084f4b6bb59ac6e8b41dc59f30b3c2d8af9d92ed07355283bd58e6",
-    "source-x86/res/ruekran-version.h": "8d2f1a29ca53e7ff948f2dae05d842f64932d64e6330cd8c2d113dafe5d2ccff",
-    "source-x86/res/ruekran-version.txt": "23ce532a5794dcf604fec2571334d876bf539db4b9ae309fd648bd0b5ecf114a",
+    "source-x86/res/ruekran-version-numeric.txt": "b0664e465b7f60b9ceb885a4aa8eee6c006bad67294898609f00868dfb0998cf",
+    "source-x86/res/ruekran-version.h": "b79cb38f78402aefa2120c5f229a48d2601c65671a52b219b6e7ff42d0986ed5",
+    "source-x86/res/ruekran-version.txt": "5434b74896aa31ca0e26a686aa3c7652862548f122dc65cdd3ffe9835ce0edbc",
     "source-x86/res/ruekran.png": "6d25ba647747809de48add570221f0ed34bab11af557195ae3f5e8e42ed76a32",
     "source-x86/res/rustdesk-banner.svg": "744c397a72fef1144d1d8fc2c1bbd39ba79d5d6d74e5b9e04e99e8982426e42a",
     "source-x86/res/rustdesk-link.desktop": "aa85c0458ae7697bd0e4ba0782e75adc09fd5f3483efe7ea07f7462a8097e05f",
@@ -1026,7 +1026,7 @@
     "source-x86/src/ui/header.tis": "9eac64113766b4d8c83ba30e05a61b7e581b0a7ab91343751c4ef6bcdcc8380e",
     "source-x86/src/ui/index.css": "b618815f97f098dcc5d420185cd67bbadcbe3a6edf689900b7973c94c4ec619d",
     "source-x86/src/ui/index.html": "c8dd65590ac826880807d85e3ced35fcbc6033fb78381ba849fd359efc3a3e5e",
-    "source-x86/src/ui/index.tis": "e4aee98e42e63eb918a9c01562f73a04f90a2a25a858d418ceb0a5da259b9606",
+    "source-x86/src/ui/index.tis": "389b56de380784e8a534c7a40e85ab2559884a480c21f89d3fd0eeb1eb2a913e",
     "source-x86/src/ui/install.html": "4796441dfcc9706360d7295bab908ccdd845f907e7346f634446d8fcba24b2a7",
     "source-x86/src/ui/install.tis": "705d19528311e9dd6d1755bec271e87ff8d065d295c6dd51f6bd6fcbaed17446",
     "source-x86/src/ui/msgbox.tis": "cba0f127b2a5ab0f4cac37f148f729c187f90d2cfe249c5bff698a63db791617",
@@ -1051,7 +1051,7 @@
     "source-x86/src/whiteboard/windows.rs": "9b5bff926634d604fd6e6f649941746080546ebfff00a346ba6c5d068896bdfa",
     "source-x86/vcpkg.json": "24371495d67e3d408ec95350eca124b9a0c1cd12dc2b2f5eedf3914de0b92ad3",
     "source-x86/flutter/assets/icon.png": "6d25ba647747809de48add570221f0ed34bab11af557195ae3f5e8e42ed76a32",
-    "source-x86/src/ui/inline.rs": "bf7ad608e3448fc8981b570265372076b1eb8ad6e674875f87c30e82c70dba26",
-    "source-x86/libs/portable/app_metadata.toml": "e9b581fec4fe318584191423a4691479a21c8a3899d74128e5beeba99ac08c29"
+    "source-x86/src/ui/inline.rs": "fbc25ad97394519815c7c8779f6cc7549729bfdd363782f4c572d42f59eaa899",
+    "source-x86/libs/portable/app_metadata.toml": "f173a5ea7e61e0ea3d2ea9b00cc08370bab3e6395265611b6eda273862c5d5e0"
   }
 }

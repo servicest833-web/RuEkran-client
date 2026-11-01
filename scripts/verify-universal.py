@@ -55,6 +55,9 @@ assert b'RuEkran relay probe:' in client, 'Missing measured automatic relay sele
 assert '<div>Установить RuЭкран</div>'.encode('utf-8') in client, 'Missing portable install prompt'
 assert 'Portable-режим. Права администратора получены.'.encode('utf-8') not in client, 'Stale portable privileges notice'
 assert b'handler.ruekran_update("install")' in client, 'Missing in-client update action'
+assert b'Rust&#68;esk' in client, 'About attribution is vulnerable to brand-name substitution'
+assert "Лицензии и сведения о программе".encode('utf-8') in client, 'Stale About legal link'
+assert "Исходный код этой сборки".encode('utf-8') not in client, 'Stale local source-folder link'
 assert b'padding: 12px 20px;' in client, 'Stale install card spacing'
 assert (payload / 'RuEkran-NOTICE.txt').read_bytes().startswith(b'\xef\xbb\xbf'), 'Win7 Notepad needs a UTF-8 BOM'
 assert (payload / 'sciter.dll').read_bytes() == (root / 'downloads/sciter-x86.dll').read_bytes()

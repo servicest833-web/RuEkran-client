@@ -1,14 +1,14 @@
 # РуЭкран — Windows client
 
-Corresponding source for the published **0.1.0-alpha.19** Windows client (update build **21**).
+Corresponding source for the published **0.1.0-alpha.20** Windows client (update build **22**).
 
 РуЭкран — Windows-клиент удалённого доступа на основе RustDesk. Этот репозиторий содержит фактические исходники выпущенной Windows-версии: изменения РуЭкран, ресурсы, общий модуль `hbb_common` и скрипты сборки. Это изменённая сборка, а не официальный выпуск RustDesk.
 
 ## Downloads and source
 
 - Product website: https://ruekran.ru/
-- Windows Alpha 19: https://ruekran.ru/releases/RuEkran-Windows-x86-x64-21.exe
-- Corresponding source archive: https://ruekran.ru/releases/RuEkran-source-21.zip
+- Windows Alpha 20: https://ruekran.ru/releases/RuEkran-Windows-x86-x64-22.exe
+- Corresponding source archive: https://ruekran.ru/releases/RuEkran-source-22.zip
 - Privacy: https://ruekran.ru/privacy/
 - Terms of use: https://ruekran.ru/terms/
 
