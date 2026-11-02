@@ -29,7 +29,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Rust toolchain installation failed' }
 $vcpkg = Join-Path $ci 'vcpkg'
 $vcpkgRevision = '9e593bb18ea69cc5095e012465dcd675a822ed0d'
 if (-not (Test-Path -LiteralPath (Join-Path $vcpkg '.git'))) {
-    & git clone --filter=blob:none https://github.com/microsoft/vcpkg.git $vcpkg
+    & git clone https://github.com/microsoft/vcpkg.git $vcpkg
     if ($LASTEXITCODE -ne 0) { throw 'vcpkg checkout failed' }
 }
 & git -C $vcpkg checkout --detach $vcpkgRevision
@@ -59,6 +59,10 @@ $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Componen
 if (-not $vs) { throw 'Visual Studio C++ tools are required' }
 Import-Module (Join-Path $vs 'Common7\Tools\Microsoft.VisualStudio.DevShell.dll')
 Enter-VsDevShell -VsInstallPath $vs -SkipAutomaticLocation -DevCmdArguments '-arch=x86 -host_arch=x64'
+# Visual Studio exports its bundled vcpkg; keep the separately pinned toolchain.
+foreach ($entry in $settings.GetEnumerator()) {
+    [Environment]::SetEnvironmentVariable($entry.Key, $entry.Value, 'Process')
+}
 
 Push-Location (Join-Path $root 'source-x86')
 try {
