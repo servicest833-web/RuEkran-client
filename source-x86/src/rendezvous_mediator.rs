@@ -319,7 +319,7 @@ impl RendezvousMediator {
                     let timeout = timeout.clone();
                     futs.push(tokio::spawn(async move {
                         if let Err(err) = Self::start(server, host).await {
-                            let err = format!("rendezvous mediator error: {err}");
+                            let err = format!("rendezvous mediator error: {err:#}");
                             // When user reboot, there might be below error, waiting too long
                             // (CONNECT_TIMEOUT 18s) will make user think there is bug
                             if err.contains("10054") || err.contains("11001") {
@@ -600,7 +600,14 @@ impl RendezvousMediator {
     pub async fn start_tcp(server: ServerPtr, host: String) -> ResultType<()> {
         let host = check_port(&host, RENDEZVOUS_PORT);
         log::info!("start tcp: {}", hbb_common::websocket::check_ws(&host));
-        let mut conn = connect_tcp(host.clone(), CONNECT_TIMEOUT).await?;
+        let registration = hbb_common::ruekran_transport::endpoint(&host, true)
+            .zip(Config::get_socks());
+        let is_tls_registration = registration.is_some();
+        let mut conn = if let Some((endpoint, conf)) = registration {
+            hbb_common::ruekran_transport::open(endpoint, &conf, CONNECT_TIMEOUT).await?
+        } else {
+            connect_tcp(host.clone(), CONNECT_TIMEOUT).await?
+        };
         let key = crate::get_key(true).await;
         crate::secure_tcp(&mut conn, &key).await?;
         let mut rz = Self {
@@ -643,10 +650,14 @@ impl RendezvousMediator {
                     if last_recv_msg.elapsed().as_millis() as u64 > rz.keep_alive as u64 * 3 / 2 {
                         bail!("Rendezvous connection is timeout");
                     }
-                    if (!Config::get_key_confirmed() ||
+                    if (is_tls_registration || !Config::get_key_confirmed() ||
                         !Config::get_host_key_confirmed(&rz.host_prefix)) &&
                         last_register_sent.map(|x| x.elapsed().as_millis() as i64).unwrap_or(REG_INTERVAL) >= REG_INTERVAL {
-                        rz.register_pk(Sink::Stream(&mut conn)).await?;
+                        if is_tls_registration {
+                            rz.register_peer(Sink::Stream(&mut conn)).await?;
+                        } else {
+                            rz.register_pk(Sink::Stream(&mut conn)).await?;
+                        }
                         last_register_sent = Some(Instant::now());
                     }
                 }

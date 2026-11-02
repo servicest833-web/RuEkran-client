@@ -156,6 +156,9 @@ pub async fn connect_tcp_local<
     ms_timeout: u64,
 ) -> ResultType<Stream> {
     if let Some(conf) = Config::get_socks() {
+        if let Some(endpoint) = crate::ruekran_transport::endpoint(&target.to_string(), false) {
+            return crate::ruekran_transport::open(endpoint, &conf, ms_timeout).await;
+        }
         return Ok(Stream::Tcp(
             FramedStream::connect(target, local, &conf, ms_timeout).await?,
         ));

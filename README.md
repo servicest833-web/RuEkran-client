@@ -1,14 +1,14 @@
 # РуЭкран — Windows client
 
-Corresponding source for the published **0.1.0-alpha.20** Windows client (update build **22**).
+Corresponding source for the published **0.1.0-beta.2** Windows client (update build **24**).
 
 РуЭкран — Windows-клиент удалённого доступа на основе RustDesk. Этот репозиторий содержит фактические исходники выпущенной Windows-версии: изменения РуЭкран, ресурсы, общий модуль `hbb_common` и скрипты сборки. Это изменённая сборка, а не официальный выпуск RustDesk.
 
 ## Downloads and source
 
 - Product website: https://ruekran.ru/
-- Windows Alpha 20: https://ruekran.ru/releases/RuEkran-Windows-x86-x64-22.exe
-- Corresponding source archive: https://ruekran.ru/releases/RuEkran-source-22.zip
+- Windows Beta 2: https://ruekran.ru/releases/RuEkran-Windows-x86-x64-24.exe
+- Corresponding source archive: https://ruekran.ru/releases/RuEkran-source-24.zip
 - Privacy: https://ruekran.ru/privacy/
 - Terms of use: https://ruekran.ru/terms/
 
@@ -23,7 +23,24 @@ Corresponding source for the published **0.1.0-alpha.20** Windows client (update
 
 The separate Java Android application, server administration code, production deployment configuration and private signing credentials are not included. Cross-platform files inherited from the RustDesk source tree are retained as part of that tree; they are not the separate РуЭкран Java Android application.
 
-## Build
+## GitHub Actions: manual build
+
+Open [Actions](https://github.com/servicest833-web/RuEkran-client/actions), select
+**Windows build (manual, no release)** and use **Run workflow** on `main`.
+The workflow verifies this Beta 2 source, installs pinned tools/dependencies and
+builds the x86 Windows client on a GitHub-hosted Windows 2022 runner. It uploads
+an unsigned test package for seven days. The x86 client also runs on x64 Windows
+through WOW64. A successful build is recorded by GitHub's actual run result,
+not implied by the presence of the workflow file.
+
+The workflow runs only when manually requested. It does not create a GitHub
+Release, publish to the website, change the updater feed or use production keys.
+The output is an unpacked unsigned package, not the public self-extracting EXE.
+See [BUILDING-WINDOWS.md](BUILDING-WINDOWS.md) for the steps and known limits.
+The root CI scripts and documentation are additional to the immutable imported
+source snapshot recorded by `SOURCE-MANIFEST.json`.
+
+## Historical release-time build scripts
 
 The published executable uses the Sciter x86 interface. The x86 binary also runs on supported x64 Windows through WOW64. This repository does not assert a fresh clean-machine build has been independently reproduced.
 
@@ -45,3 +62,10 @@ The covered client source and its modifications are distributed under **GNU Affe
 RustDesk upstream: https://github.com/rustdesk/rustdesk. Existing copyright notices, including Purslane Tech Pte. Ltd. and other contributors, are retained. РуЭкран is provided by its own operator; upstream authors are not represented as the provider of this modified release.
 
 The software is provided without warranty to the extent permitted by the licence and applicable law. The AGPL rights to use, study, modify and redistribute covered source are not restricted by the service's terms.
+
+This Windows interface uses Sciter Engine (https://sciter.com/), copyright Terra
+Informatica Software, Inc. Sciter is an external proprietary runtime, not an AGPL
+component or a Windows system library. Its EULA is included in the binary package.
+Publishing this source and setting up CI do not establish SignPath Foundation
+eligibility or resolve the licensing compatibility questions around Sciter.
+The project does not claim a SignPath signature or sponsorship.

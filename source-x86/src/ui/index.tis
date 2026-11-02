@@ -36,8 +36,12 @@ var using_public_server = handler.using_public_server();
 var software_update_url = "";
 var ruekran_update_status = "{}";
 var portable_privileges = is_win ? handler.get_portable_privileges() : "";
+var install_reminder = is_win && !disable_installation && handler.should_suggest_install();
+var install_suggestion_focused = false;
 var key_confirmed = tmp[1];
 var system_error = "";
+var rt_ca_required = handler.get_option("ruekran-rt-ca-required");
+var rt_ca_later = false;
 
 const default_option_lang = is_custom_client ? 'default' : '';
 const default_option_yes = is_custom_client ? 'Y' : '';
@@ -463,10 +467,20 @@ function open_proxy_dialog() {
     var old_proxy = socks5[0] || "";
     var old_username = socks5[1] || "";
     var old_password = socks5[2] || "";
+    var old_protocol = "socks5";
+    var old_address = old_proxy;
+    var scheme_end = old_proxy.indexOf("://");
+    if (scheme_end >= 0) {
+        old_protocol = old_proxy.substring(0, scheme_end).toLowerCase();
+        old_address = old_proxy.substring(scheme_end + 3);
+    }
     var type_str = is_opt_fixed ? "custom-server-nook" : "custom-server";
     var greyStyle = is_opt_fixed ? grey_text_style : "";
-    msgbox(type_str, "Socks5/Http(s) Proxy", <div .form .set-password>
-            <div><span style={greyStyle}>{translate("Server")}:</span><input|text .outline-focus style={greyStyle} name='proxy' value={old_proxy} disabled={ is_opt_fixed ? "true" : "false" } /></div>
+    msgbox(type_str, "Прокси-сервер", <div .form .set-password>
+            <div><span style={greyStyle}>Тип:</span><select name="proxy_protocol" value={old_protocol} disabled={is_opt_fixed ? "true" : "false"} style="width:220px">
+                <option value="http">HTTP</option><option value="https">HTTPS</option><option value="socks5">SOCKS5</option>
+            </select></div>
+            <div><span style={greyStyle}>{translate("Server")}:</span><input|text .outline-focus style={greyStyle} name='proxy' value={old_address} novalue="Адрес:порт" disabled={ is_opt_fixed ? "true" : "false" } /></div>
             <div><span style={greyStyle}>{translate("Username")}:</span><input|text style={greyStyle} name='username' value={old_username} disabled={ is_opt_fixed ? "true" : "false" } /></div>
             <div><span style={greyStyle}>{translate("Password")}:</span>{ is_opt_fixed ? <input|password style={grey_text_style} name='password' value={old_password} disabled="true" /> : <PasswordComponent value={old_password} /> }</div>
             </div>
@@ -474,9 +488,19 @@ function open_proxy_dialog() {
                 if (!res) return;
                 if (typeof show_progress === 'function') show_progress();
                 var proxy = (res.proxy || "").trim();
+                var protocol = res.proxy_protocol || old_protocol;
+                // Accept pasted URLs, but store a canonical, explicit scheme.
+                var pasted_scheme = proxy.indexOf("://");
+                if (pasted_scheme >= 0) {
+                    protocol = proxy.substring(0, pasted_scheme).toLowerCase();
+                    proxy = proxy.substring(pasted_scheme + 3);
+                }
+                if (protocol != "http" && protocol != "https" && protocol != "socks5") {
+                    if (typeof show_progress === 'function') show_progress(false, "Выберите HTTP, HTTPS или SOCKS5");
+                    return;
+                }
                 var username = (res.username || "").trim();
                 var password = (res.password || "").trim();
-                if (proxy == old_proxy && username == old_username && password == old_password) return;
                 if (proxy) {
                     var domain_port = proxy;
                     var protocol_index = domain_port.indexOf('://');
@@ -485,10 +509,15 @@ function open_proxy_dialog() {
                     }
                     var err = handler.test_if_valid_server(domain_port, false);
                     if (err) { if (typeof show_progress === 'function') show_progress(false, translate("Server") + ": " + err); return; }
+                    proxy = protocol + "://" + domain_port;
+                }
+                if (proxy == old_proxy && username == old_username && password == old_password) {
+                    if (typeof show_progress === 'function') show_progress(-1);
+                    return;
                 }
                 handler.set_socks(proxy, username, password);
                 if (typeof show_progress === 'function') show_progress(-1);
-            }, 240, get_msgbox_width());
+            }, 280, get_msgbox_width());
 }
 
 function isDarkTheme() {
@@ -812,6 +841,8 @@ class App: Reactor.Component
                     {!outgoing_only ? <ConnectStatus @{this.connect_status} /> : ""}
                 </div>}
                 <div #overlay style="position: absolute;size:*;background:black;opacity:0.5;display:none" />
+                {install_reminder && <InstallSuggestion />}
+                {rt_ca_required && !rt_ca_later && <ProxyCertificateSuggestion />}
             </div>; 
     }
 
@@ -830,18 +861,72 @@ class App: Reactor.Component
 
 class InstallMe: Reactor.Component {
     function render() {
-        return <div .install-me>
-            <span />
-            <div>Установить RuЭкран</div>
-            <div>
-                <button #install-me .button>{translate('Install')}</button>
-            </div>
+        return <div .install-me style={incoming_only ? "margin-bottom:42px" : ""}>
+            <div .install-caption>Работает без установки</div>
+            <button #install-me .button>
+                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M11 3h2v9l3-3 1.4 1.4L12 15.8l-5.4-5.4L8 9l3 3V3zM4 15h2v4h12v-4h2v6H4v-6z"/></svg>
+                <span>Установить РуЭкран</span>
+            </button>
+            <div .install-note>Для постоянного доступа к этому компьютеру</div>
         </div>;
     }
 
     event click $(#install-me) {
         handler.goto_install();
     }
+}
+
+class ProxyCertificateSuggestion: Reactor.Component {
+    function render() {
+        return <div .install-suggestion-overlay><div .install-suggestion>
+            <div .suggestion-brand><img src={handler.get_icon()} /><span>РуЭкран</span></div>
+            <div .suggestion-title>Подключение через сеть Ростелекома</div>
+            <div .suggestion-copy>Для защищённого подключения этой сети требуется её сертификат. Разрешить использовать сертификат Ростелекома в РуЭкран?</div>
+            <div .suggestion-copy>Он будет использоваться только при работе через прокси. Настройки доверия Windows не изменятся.</div>
+            <div .suggestion-actions><button .button .outline #proxy-ca-later>Позже</button><button .button #proxy-ca-allow>Разрешить</button></div>
+        </div></div>;
+    }
+    event click $(#proxy-ca-later) { rt_ca_later = true; app.update(); }
+    event click $(#proxy-ca-allow) {
+        rt_ca_later = true;
+        handler.set_option("ruekran-rt-ca-approved", rt_ca_required);
+        var proxy = handler.get_socks();
+        if (proxy && proxy.length) handler.set_socks(proxy[0], proxy[1] || "", proxy[2] || "");
+        rt_ca_required = "";
+        app.update();
+    }
+}
+
+class InstallSuggestion: Reactor.Component {
+    function render() {
+        if (!install_suggestion_focused) {
+            install_suggestion_focused = true;
+            self.timer(10ms, function() {
+                var later = $(#suggest-later);
+                if (later) view.focus = later;
+            });
+        }
+        return <div .install-suggestion-overlay>
+            <div .install-suggestion>
+                <div .suggestion-brand><img src={handler.get_icon()} /><span>РуЭкран</span></div>
+                <div .suggestion-title>Установите для удобной работы</div>
+                <div .suggestion-copy>РуЭкран сможет запускаться вместе с Windows — компьютер будет готов к подключению после перезагрузки.</div>
+                <div .suggestion-copy>Вы также можете продолжить пользоваться без установки.</div>
+                <div .suggestion-actions>
+                    <button .button .outline #suggest-later>Позже</button>
+                    <button .button #suggest-install>Установить</button>
+                </div>
+            </div>
+        </div>;
+    }
+    function finish(install) {
+        handler.set_local_option("ruekran-install-reminder", "dismissed");
+        install_reminder = false;
+        app.update();
+        if (install) handler.goto_install();
+    }
+    event click $(#suggest-later) { this.finish(false); }
+    event click $(#suggest-install) { this.finish(true); }
 }
 
 class RuEkranUpdate: Reactor.Component {
@@ -1387,6 +1472,16 @@ function formatId(id) {
 }
 
 event keydown (evt) {
+    if (install_reminder) {
+        if (evt.keyCode == Event.VK_ESCAPE) $(#suggest-later).sendEvent("click");
+        else if (evt.keyCode == Event.VK_TAB) {
+            view.focus = view.focus && view.focus.id == "suggest-later" ? $(#suggest-install) : $(#suggest-later);
+        } else if (isEnterKey(evt)) {
+            var button = view.focus && view.focus.id == "suggest-install" ? $(#suggest-install) : $(#suggest-later);
+            button.sendEvent("click");
+        }
+        return true;
+    }
     if (view.focus && view.focus.id != 'remote_id') {
         return;
     }
@@ -1458,6 +1553,7 @@ function self.closing() {
 }
 
 function self.ready() {
+    if (is_win) handler.import_system_proxy();
     var r = handler.get_size();
     if (isReasonableSize(r) && r[2] > 0) {
         var (sx, sy, sw, sh) = view.screenBox(#workarea, #rectw);
@@ -1488,6 +1584,11 @@ function showSettings() {
 function checkConnectStatus() {
     handler.check_mouse_time(); // trigger connection status updater
     self.timer(1s, function() {
+        var required = handler.get_option("ruekran-rt-ca-required");
+        if (required != rt_ca_required) {
+            rt_ca_required = required;
+            app.update();
+        }
         var tmp = handler.get_option("stop-service") == "Y";
         if (tmp != service_stopped) {
             service_stopped = tmp;
@@ -1536,6 +1637,7 @@ function checkConnectStatus() {
         }
         if (handler.recent_sessions_updated()) {
             stdout.println("recent sessions updated");
+            if (is_win && !disable_installation) install_reminder = handler.should_suggest_install();
             updateAbPeer();
             app.update();
         }

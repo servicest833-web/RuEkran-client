@@ -270,6 +270,17 @@ impl UI {
         show_run_without_install()
     }
 
+    fn should_suggest_install(&self) -> bool {
+        #[cfg(windows)]
+        {
+            return !crate::platform::is_installed()
+                && !hbb_common::config::is_disable_installation()
+                && hbb_common::config::LocalConfig::get_option_from_file("ruekran-install-reminder") == "ready";
+        }
+        #[cfg(not(windows))]
+        false
+    }
+
     fn get_license(&self) -> String {
         get_license()
     }
@@ -384,6 +395,20 @@ impl UI {
 
     fn set_socks(&self, proxy: String, username: String, password: String) {
         set_socks(proxy, username, password)
+    }
+
+    fn import_system_proxy(&self) {
+        #[cfg(windows)]
+        {
+            if hbb_common::config::LocalConfig::get_option("ruekran-system-proxy-checked").is_empty() {
+                hbb_common::config::LocalConfig::set_option("ruekran-system-proxy-checked".into(), "Y".into());
+                if get_socks().is_empty() && !crate::ui_interface::is_option_fixed("proxy-url") {
+                    if let Some(proxy) = crate::platform::windows::system_http_proxy() {
+                        set_socks(proxy, String::new(), String::new());
+                    }
+                }
+            }
+        }
     }
 
     fn is_installed(&self) -> bool {
@@ -848,6 +873,7 @@ impl sciter::EventHandler for UI {
         fn get_sound_inputs();
         fn set_options(Value);
         fn set_option(String, String);
+        fn import_system_proxy();
         fn get_software_update_url();
         fn ruekran_update(String);
         fn get_portable_privileges();
@@ -857,6 +883,7 @@ impl sciter::EventHandler for UI {
         fn get_fingerprint();
         fn update_me(String);
         fn show_run_without_install();
+        fn should_suggest_install();
         fn open_installed_client();
         fn run_without_install();
         fn get_app_name();

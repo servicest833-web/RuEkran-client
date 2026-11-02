@@ -1048,7 +1048,10 @@ impl Client {
                         start = Instant::now();
                         let selected_region = relay_region::selected().await;
                         let region_switch_code = interface.get_switch_code();
-                        let server_fallback = rr.relay_server.clone();
+                        let server_fallback = relay_region::fallback(
+                            selected_region.unwrap_or(&rr.relay_server), &rr.relay_server,
+                        ).unwrap_or_else(|| rr.relay_server.clone());
+                        let can_fallback = selected_region.unwrap_or(&rr.relay_server) != server_fallback;
                         let used_server_fallback = std::sync::atomic::AtomicBool::new(false);
                         let mut connect_futures = Vec::new();
                         if let Some(s) = ipv6.0 {
@@ -1137,10 +1140,19 @@ impl Client {
                                     Err(error) => Err(error),
                                 }
                             } else {
-                                Self::create_relay(
+                                match Self::create_relay(
                                     &peer, rr.uuid, rr.relay_server, &key,
                                     conn_type, my_addr.is_ipv4(),
-                                ).await
+                                ).await {
+                                    Ok(conn) => Ok(conn),
+                                    Err(error) if can_fallback => {
+                                        log::warn!("Server relay setup failed; trying alternate region: {}", error);
+                                        used_server_fallback.store(true, std::sync::atomic::Ordering::Relaxed);
+                                        Self::request_relay(&peer, server_fallback.clone(), &rendezvous_server,
+                                            !signed_id_pk.is_empty(), &key, &token, conn_type, &region_switch_code).await
+                                    }
+                                    Err(error) => Err(error),
+                                }
                             }
                         };
                         connect_futures.push(
@@ -1262,8 +1274,7 @@ impl Client {
                                 direct = false;
                                 pk
                             }
-                            Err(e) if selected_region.is_some()
-                                && negotiated_relay != server_fallback
+                            Err(e) if negotiated_relay != server_fallback
                                 && matches!(typ, "Relay" | "WebSocket") => {
                                 log::warn!("Selected relay handshake failed; retrying server route: {}", e);
                                 let mut fallback = Self::request_relay(
@@ -1455,6 +1466,7 @@ impl Client {
         // Guard the offerer for the whole of connect(): any early return — cancellation during the
         // awaits below, the relay override, or a secure_connection failure — closes its pc via the
         // guard's drop. Disarmed only once WebRTC is the confirmed winning, secured transport.
+        let server_route = relay_server.to_owned();
         let mut relay_server = relay_region::manual().unwrap_or(relay_server).to_owned();
         let _relay_probe = tokio::spawn(relay_region::selected());
         let mut webrtc_guard = webrtc_offerer.map(OffererGuard::new);
@@ -1583,9 +1595,10 @@ impl Client {
             if let Some(selected) = relay_region::selected().await { relay_server = selected.to_owned(); }
             if !relay_server.is_empty() {
                 let switch_code = interface.get_switch_code();
-                conn = Self::request_relay(
+                conn = Self::request_relay_with_fallback(
                     peer_id,
-                    relay_server.to_owned(),
+                    &mut relay_server,
+                    &server_route,
                     rendezvous_server,
                     !signed_id_pk.is_empty(),
                     key,
@@ -1620,9 +1633,10 @@ impl Client {
                 log::warn!("{} secure handshake failed ({}), falling back to relay", typ, e);
                 drop(webrtc_guard.take());
                 if let Some(selected) = relay_region::selected().await { relay_server = selected.to_owned(); }
-                match Self::request_relay(
+                match Self::request_relay_with_fallback(
                     peer_id,
-                    relay_server.to_owned(),
+                    &mut relay_server,
+                    &server_route,
                     rendezvous_server,
                     !signed_id_pk.is_empty(),
                     key,
@@ -1658,6 +1672,21 @@ impl Client {
                         );
                     }
                 }
+            }
+            Err(e) if matches!(typ, "Relay" | "WebSocket")
+                && relay_region::fallback(&relay_server, &server_route).is_some() => {
+                let alternate = relay_region::fallback(&relay_server, &server_route).unwrap();
+                log::warn!("Relay handshake failed; trying alternate region: {}", e);
+                let mut alternate_conn = Self::request_relay(
+                    peer_id, alternate.clone(), rendezvous_server,
+                    !signed_id_pk.is_empty(), key, token, conn_type,
+                    &interface.get_switch_code(),
+                ).await?;
+                let pk = Self::secure_connection(peer_id, signed_id_pk, key, &mut alternate_conn).await?;
+                conn = alternate_conn;
+                relay_server = alternate;
+                direct = false;
+                pk
             }
             Err(e) => {
                 // this direct is mainly used by on_establish_connection_error, so we update it here before bail
@@ -1817,6 +1846,36 @@ impl Client {
             }
         }
         Ok(option_pk)
+    }
+
+    /// Coordinate a fresh peer pairing on another known region if transport
+    /// setup fails. Updating the endpoint keeps the UI and success hint honest.
+    async fn request_relay_with_fallback(
+        peer: &str,
+        relay_server: &mut String,
+        server_route: &str,
+        rendezvous_server: &str,
+        secure: bool,
+        key: &str,
+        token: &str,
+        conn_type: ConnType,
+        switch_code: &str,
+    ) -> ResultType<Stream> {
+        match Self::request_relay(peer, relay_server.clone(), rendezvous_server,
+            secure, key, token, conn_type, switch_code).await {
+            Ok(conn) => Ok(conn),
+            Err(primary_error) => {
+                let alternate = match relay_region::fallback(relay_server, server_route) {
+                    Some(endpoint) => endpoint,
+                    None => return Err(primary_error),
+                };
+                log::warn!("Relay setup failed; trying alternate region: {}", primary_error);
+                let conn = Self::request_relay(peer, alternate.clone(), rendezvous_server,
+                    secure, key, token, conn_type, switch_code).await?;
+                *relay_server = alternate;
+                Ok(conn)
+            }
+        }
     }
 
     /// Request a relay connection to the server.

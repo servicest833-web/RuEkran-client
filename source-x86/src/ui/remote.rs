@@ -349,6 +349,11 @@ impl InvokeUiSession for SciterHandler {
     fn on_connected(&self, conn_type: ConnType) {
         match conn_type {
             ConnType::DEFAULT_CONN => {
+                #[cfg(windows)]
+                if !crate::platform::is_installed() && !hbb_common::config::is_disable_installation()
+                    && hbb_common::config::LocalConfig::get_option_from_file("ruekran-install-reminder").is_empty() {
+                    hbb_common::config::LocalConfig::set_option("ruekran-install-reminder".to_owned(), "ready".to_owned());
+                }
                 crate::keyboard::client::start_grab_loop();
             }
             _ => {}

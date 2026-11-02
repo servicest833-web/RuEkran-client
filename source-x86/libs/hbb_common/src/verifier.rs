@@ -162,8 +162,9 @@ impl ServerCertVerifier for FallbackPlatformVerifier {
     }
 }
 
-fn webpki_server_verifier(
+pub(crate) fn webpki_server_verifier(
     provider: Arc<rustls::crypto::CryptoProvider>,
+    extra_root: Option<rustls_pki_types::CertificateDer<'static>>,
 ) -> ResultType<Arc<WebPkiServerVerifier>> {
     // Load root certificates from both bundled webpki_roots and system-native certificate stores.
     // This approach is consistent with how reqwest and tokio-tungstenite handle root certificates.
@@ -177,6 +178,7 @@ fn webpki_server_verifier(
         log::warn!("native root CA certificate loading errors: {errors:?}");
     }
     root_cert_store.add_parsable_certificates(certs);
+    if let Some(cert) = extra_root { root_cert_store.add(cert)?; }
 
     // Build verifier using with_root_certificates behavior (WebPkiServerVerifier without CRLs).
     // Both reqwest and tokio-tungstenite use this approach.
@@ -209,6 +211,10 @@ pub fn client_config(danger_accept_invalid_cert: bool) -> ResultType<ClientConfi
 }
 
 pub fn client_config_safe() -> ResultType<ClientConfig> {
+    client_config_safe_with_extra_root(None)
+}
+
+pub fn client_config_safe_with_extra_root(extra_root: Option<rustls_pki_types::CertificateDer<'static>>) -> ResultType<ClientConfig> {
     // Use the default builder which uses the default protocol versions and crypto provider.
     // The with_protocol_versions API has been removed in rustls master branch:
     // https://github.com/rustls/rustls/pull/2599
@@ -216,7 +222,7 @@ pub fn client_config_safe() -> ResultType<ClientConfig> {
     // https://github.com/snapview/tokio-tungstenite/blob/35d110c24c9d030d1608ec964d70c789dfb27452/src/tls.rs#L126
     let config_builder = rustls::ClientConfig::builder();
     let provider = config_builder.crypto_provider().clone();
-    let webpki_verifier = webpki_server_verifier(provider.clone())?;
+    let webpki_verifier = webpki_server_verifier(provider.clone(), extra_root)?;
     #[cfg(any(target_os = "android", target_os = "ios"))]
     {
         match FallbackPlatformVerifier::with_platform_fallback(webpki_verifier.clone(), provider) {

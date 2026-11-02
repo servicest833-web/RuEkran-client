@@ -32,6 +32,15 @@ use std::{
     time::{Duration, Instant},
 };
 use wallpaper;
+
+/// Read the interactive user's explicit system proxy. PAC scripts are never executed.
+pub fn system_http_proxy() -> Option<String> {
+    let settings = RegKey::predef(HKEY_CURRENT_USER)
+        .open_subkey("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings").ok()?;
+    if settings.get_value::<u32, _>("ProxyEnable").ok()? != 1 { return None; }
+    let value: String = settings.get_value("ProxyServer").ok()?;
+    hbb_common::ruekran_transport::system_proxy_url(&value)
+}
 #[cfg(not(debug_assertions))]
 use winapi::um::libloaderapi::{LoadLibraryExW, LOAD_LIBRARY_SEARCH_USER_DIRS};
 use winapi::{

@@ -67,6 +67,8 @@ pub struct FramedStream(
     pub SocketAddr,
     pub Option<Encrypt>,
     pub u64,
+    /// Set only after certificate validation and the fixed RuEkran TLS Upgrade.
+    pub bool,
 );
 
 impl Deref for FramedStream {
@@ -138,6 +140,7 @@ impl FramedStream {
                         addr,
                         None,
                         0,
+                        false,
                     ));
                 }
             }
@@ -172,6 +175,7 @@ impl FramedStream {
             addr,
             None,
             0,
+            false,
         )
     }
 

@@ -565,6 +565,64 @@ div.install-me > div:nth-child(1), div.trust-me > div:nth-child(1) { text-align:
 div.install-me > div:nth-child(2) { font-size: 11px; color: color(light-text); }
 div.install-me > div:nth-child(3), div.trust-me > div:nth-child(3) { text-align: left; font-size: 12px; font-weight: normal; color: color(button); }
 .install-me .button { border: 1px solid color(border); color: color(text); border-radius: 7px; }
+
+/* Keep the portable install action visible at the bottom of the left column. */
+.left-pane div.install-me {
+    margin: 12px;
+    padding: 14px;
+    border: 1px solid #e5c9ce;
+    border-radius: 12px;
+    background: linear-gradient(top, #fff7f8, #f6e9ec);
+    color: color(text);
+}
+.left-pane div.install-me > div.install-caption {
+    font-size: 12px;
+    font-weight: normal;
+    color: color(light-text);
+    text-align: left;
+    margin: 0 0 10px 0;
+}
+.left-pane div.install-me > button#install-me {
+    flow: horizontal;
+    width: *;
+    height: 48px;
+    line-height: 48px;
+    margin: 0;
+    padding: 0 8px;
+    border: none;
+    border-radius: 9px;
+    background: linear-gradient(left, #c3485b, #91374c);
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.left-pane div.install-me > button#install-me:hover { background: linear-gradient(left, #d15367, #a33e55); }
+.left-pane div.install-me > button#install-me:active { background: #91374c; }
+.left-pane div.install-me > button#install-me:focus { outline: #e5a3af solid 2px; }
+button#install-me svg { size: 16px; margin: * 6px * 0; }
+button#install-me span { margin: * 0; }
+.left-pane div.install-me > div.install-note {
+    margin: 10px 0 0 0;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.4em;
+    text-align: left;
+    color: color(light-text);
+}
+html.darktheme .left-pane div.install-me { background: linear-gradient(top, #352930, #2b252d); border-color: #63404d; }
+.install-suggestion-overlay { position: absolute; top: 0; left: 0; size: *; background: #0007; z-index: 100; }
+.install-suggestion { width: 350px; max-height: 80%; overflow-y: auto; margin: *; padding: 26px; border: 1px solid color(border); border-radius: 16px; background: color(bg); color: color(text); }
+.suggestion-brand { flow: horizontal; height: 36px; border-spacing: 10px; margin-bottom: 20px; font-size: 18px; font-weight: bold; }
+.suggestion-brand img { size: 36px; }
+.suggestion-brand span { margin: * 0; }
+.suggestion-title { font-size: 21px; font-weight: bold; line-height: 1.25em; margin-bottom: 14px; }
+.suggestion-copy { font-size: 13px; line-height: 1.55em; margin-bottom: 12px; color: color(light-text); }
+.suggestion-actions { flow: horizontal; border-spacing: 10px; margin-top: 22px; }
+.suggestion-actions button { width: *; height: 42px; border-radius: 8px; font-size: 14px; cursor: pointer; }
+.suggestion-actions #suggest-later { background: color(bg); color: color(text); border: 1px solid color(border); }
+.suggestion-actions #suggest-install { color: white; border: none; background: linear-gradient(left, #c3485b, #91374c); }
+.suggestion-actions #suggest-install:hover { background: linear-gradient(left, #d15367, #a33e55); }
 div.connect-status { padding: 12px 20px; font-size: 11px; color: color(light-text); background: color(bg); }
 
 /* Align the wordmark to the icon center; the slogan has its own full-width row. */

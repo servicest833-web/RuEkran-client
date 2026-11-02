@@ -14,6 +14,11 @@ pub enum Stream {
 }
 
 impl Stream {
+    /// Transport authentication is separate from the peer's end-to-end key.
+    pub fn is_transport_authenticated(&self) -> bool {
+        matches!(self, Stream::Tcp(s) if s.4)
+    }
+
     #[inline]
     pub fn set_send_timeout(&mut self, ms: u64) {
         match self {

@@ -1045,10 +1045,15 @@ async fn handle(data: Data, stream: &mut Connection) {
         },
         Data::Options(value) => match value {
             None => {
-                let v = Config::get_options();
+                let mut v = Config::get_options();
+                v.remove("ruekran-rt-ca-required");
+                if hbb_common::ruekran_transport::rt_ca_required() {
+                    v.insert("ruekran-rt-ca-required".into(), hbb_common::ruekran_transport::RT_CA_FINGERPRINT.into());
+                }
                 allow_err!(stream.send(&Data::Options(Some(v))).await);
             }
-            Some(value) => {
+            Some(mut value) => {
+                value.remove("ruekran-rt-ca-required");
                 let _chk = CheckIfRestart::new();
                 let _nat = CheckTestNatType::new();
                 if let Some(v) = value.get("privacy-mode-impl-key") {
@@ -1922,7 +1927,8 @@ pub fn set_option(key: &str, value: &str) {
 }
 
 #[tokio::main(flavor = "current_thread")]
-pub async fn set_options(value: HashMap<String, String>) -> ResultType<()> {
+pub async fn set_options(mut value: HashMap<String, String>) -> ResultType<()> {
+    value.remove("ruekran-rt-ca-required");
     let _nat = CheckTestNatType::new();
     if let Ok(mut c) = connect(1000, "").await {
         c.send(&Data::Options(Some(value.clone()))).await?;

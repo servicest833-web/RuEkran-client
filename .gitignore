@@ -3,6 +3,7 @@
 /package/
 /dist/
 /logs/
+/.ci/
 **/target/
 **/build/
 **/node_modules/
